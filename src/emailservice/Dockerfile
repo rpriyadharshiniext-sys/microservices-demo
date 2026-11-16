@@ -22,7 +22,8 @@ RUN apk update \
 
 # get packages
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir setuptools==80.9.0 \
+    && pip install --no-cache-dir -r requirements.txt
 
 FROM base
 # Enable unbuffered logging
