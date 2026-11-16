@@ -43,7 +43,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: productcatalogservice
+        image: ghcr.io/rpriyadharshiniext-sys/online-boutique-productcatalogservice:latest
         ports:
         - containerPort: 3550
         env:
