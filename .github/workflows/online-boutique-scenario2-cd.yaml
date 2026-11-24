@@ -1,0 +1,61 @@
+
+name: Online Boutique - Scenario 2 CD
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform-deploy:
+    name: Terraform Deployment to K3s
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify Terraform and Kubernetes access
+        run: |
+          terraform version
+          kubectl --kubeconfig=/home/ubuntu/.kube/config get nodes
+
+      - name: Copy Scenario 2 configuration
+        run: |
+          mkdir -p /home/ubuntu/online-boutique-scenario2-terraform
+          cp -a scenario2-terraform/. \
+            /home/ubuntu/online-boutique-scenario2-terraform/
+
+      - name: Verify existing Terraform state
+        working-directory: /home/ubuntu/online-boutique-scenario2-terraform
+        run: |
+          terraform state list
+          COUNT=$(terraform state list | wc -l)
+          echo "Terraform resources in state: $COUNT"
+          if [ "$COUNT" -ne 33 ]; then
+            echo "ERROR: Expected 33 existing resources. Stopping deployment."
+            exit 1
+          fi
+
+      - name: Terraform Initialize
+        working-directory: /home/ubuntu/online-boutique-scenario2-terraform
+        run: terraform init -input=false
+
+      - name: Terraform Plan
+        working-directory: /home/ubuntu/online-boutique-scenario2-terraform
+        run: terraform plan -input=false -out=tfplan
+
+      - name: Terraform Apply
+        working-directory: /home/ubuntu/online-boutique-scenario2-terraform
+        run: terraform apply -input=false -auto-approve tfplan
+
+      - name: Verify Scenario 2 pods
+        run: |
+          kubectl --kubeconfig=/home/ubuntu/.kube/config \
+            get pods -n online-boutique-scenario2
+
+      - name: Verify Scenario 2 services
+        run: |
+          kubectl --kubeconfig=/home/ubuntu/.kube/config \
+            get services -n online-boutique-scenario2
