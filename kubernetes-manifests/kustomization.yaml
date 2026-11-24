@@ -37,3 +37,44 @@ resources:
 # - ../kustomize/components/container-images-tag
 # - ../kustomize/components/container-images-tag-suffix
 # - ../kustomize/components/container-images-registry
+
+images:
+  - name: adservice
+    newName: ghcr.io/rpriyadharshiniext-sys/online-boutique-adservice
+    newTag: latest
+
+  - name: cartservice
+    newName: ghcr.io/rpriyadharshiniext-sys/online-boutique-cartservice
+    newTag: latest
+
+  - name: checkoutservice
+    newName: ghcr.io/rpriyadharshiniext-sys/online-boutique-checkoutservice
+    newTag: latest
+
+  - name: currencyservice
+    newName: ghcr.io/rpriyadharshiniext-sys/online-boutique-currencyservice
+    newTag: latest
+
+  - name: emailservice
+    newName: ghcr.io/rpriyadharshiniext-sys/online-boutique-emailservice
+    newTag: latest
+
+  - name: frontend
+    newName: ghcr.io/rpriyadharshiniext-sys/online-boutique-frontend
+    newTag: latest
+
+  - name: paymentservice
+    newName: ghcr.io/rpriyadharshiniext-sys/online-boutique-paymentservice
+    newTag: latest
+
+  - name: productcatalogservice
+    newName: ghcr.io/rpriyadharshiniext-sys/online-boutique-productcatalogservice
+    newTag: latest
+
+  - name: recommendationservice
+    newName: ghcr.io/rpriyadharshiniext-sys/online-boutique-recommendationservice
+    newTag: latest
+
+  - name: shippingservice
+    newName: ghcr.io/rpriyadharshiniext-sys/online-boutique-shippingservice
+    newTag: latest
