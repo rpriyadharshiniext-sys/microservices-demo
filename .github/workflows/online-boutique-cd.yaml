@@ -28,9 +28,10 @@ jobs:
 
       - name: Wait for deployments
         run: |
-          kubectl --kubeconfig=/home/ubuntu/.kube/config \
-            rollout status deployments --all \
-            -n default --timeout=300s
+          for deployment in $(kubectl --kubeconfig=/home/ubuntu/.kube/config get deployments -n default -o name); do
+            echo "Waiting for $deployment"
+            kubectl --kubeconfig=/home/ubuntu/.kube/config rollout status "$deployment" -n default --timeout=300s || exit 1
+          done
 
       - name: Verify application pods
         run: |
