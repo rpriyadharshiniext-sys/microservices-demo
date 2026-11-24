@@ -1,0 +1,43 @@
+
+name: Online Boutique - Scenario 1 CD
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to K3s
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check Kubernetes connection
+        run: |
+          kubectl --kubeconfig=/home/ubuntu/.kube/config \
+            get nodes
+
+      - name: Update application deployments
+        run: |
+          kubectl --kubeconfig=/home/ubuntu/.kube/config \
+            rollout restart deployments -n default
+
+      - name: Wait for deployments
+        run: |
+          kubectl --kubeconfig=/home/ubuntu/.kube/config \
+            rollout status deployments --all \
+            -n default --timeout=300s
+
+      - name: Verify application pods
+        run: |
+          kubectl --kubeconfig=/home/ubuntu/.kube/config \
+            get pods -n default -o wide
+
+      - name: Verify application services
+        run: |
+          kubectl --kubeconfig=/home/ubuntu/.kube/config \
+            get services -n default
