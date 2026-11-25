@@ -1,17 +1,28 @@
-        - name: Terraform Plan - Verify No Changes
-          working-directory: /home/ubuntu/online-boutique-scenario2-terraform
-          run: |
-            set +e
-            terraform plan -input=false -detailed-exitcode -out=tfplan
-            PLAN_EXIT_CODE=$?
-            set -e
+name: Online Boutique - Scenario 2 CD
 
-            if [ "$PLAN_EXIT_CODE" -eq 0 ]; then
-              echo "No infrastructure changes detected."
-            elif [ "$PLAN_EXIT_CODE" -eq 2 ]; then
-              echo "Unexpected Terraform changes detected. Stopping for review."
-              exit 1
-            else
-              echo "Terraform plan failed."
-              exit "$PLAN_EXIT_CODE"
-            fi
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform-deploy:
+    name: Terraform Deployment Verification
+    runs-on: self-hosted
+
+    steps:
+      - name: Terraform Plan - Verify No Changes
+        working-directory: /home/ubuntu/online-boutique-scenario2-terraform
+        run: |
+          set +e
+          terraform plan -input=false -detailed-exitcode -out=tfplan
+          PLAN_EXIT_CODE=$?
+          set -e
+
+          if [ "$PLAN_EXIT_CODE" -eq 0 ]; then
+            echo "No infrastructure changes detected."
+          elif [ "$PLAN_EXIT_CODE" -eq 2 ]; then
+            echo "Unexpected Terraform changes detected. Stopping for review."
+            exit 1
+          else
+            echo "Terraform plan failed."
+            exit "$PLAN_EXIT_CODE"
+          fi
